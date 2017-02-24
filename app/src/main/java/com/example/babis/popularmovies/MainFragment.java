@@ -48,7 +48,7 @@ public class MainFragment extends Fragment{
     private RecyclerView recyclerView;
     private ImageAdaper adapter;
     int width;
-    final String API_KEY = "f780f720bae7adbe3ff65f2c74337c36";
+    final String API_KEY = "";
     static ArrayList<String> posters;
     static boolean sortByPop = true;
     ProgressBar bar;
