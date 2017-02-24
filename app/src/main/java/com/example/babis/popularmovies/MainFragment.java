@@ -97,11 +97,11 @@ public class MainFragment extends Fragment{
         if (isNetworkAvailable()) {
             new ImageLoadTask().execute();
         } else {
-            Toast.makeText(getContext(), "No Internet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),R.string.no_internet, Toast.LENGTH_SHORT).show();
         }
 
     }
-    
+
 
     public class ImageLoadTask extends AsyncTask<Void,Void,ArrayList<String>>{
 
