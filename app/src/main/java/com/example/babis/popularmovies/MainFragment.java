@@ -37,7 +37,7 @@ import java.util.Arrays;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MainFragment extends Fragment{
+public class MainFragment extends Fragment implements ImageAdaper.ItemClickCallBack{
 
 
     public MainFragment() {
@@ -65,7 +65,6 @@ public class MainFragment extends Fragment{
         recyclerView = (RecyclerView)view.findViewById(R.id.my_recycler_view);
         GridLayoutManager manager =  new GridLayoutManager(getActivity(),2);
         recyclerView.setLayoutManager(manager);
-
 
 
         WindowManager wm =(WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
@@ -103,6 +102,15 @@ public class MainFragment extends Fragment{
     }
 
 
+
+
+    @Override
+    public void onItemClick(int p) {
+        String index = String.valueOf(p);
+        Toast.makeText(getActivity(),"hello movie "+index,Toast.LENGTH_SHORT).show();
+    }
+
+
     public class ImageLoadTask extends AsyncTask<Void,Void,ArrayList<String>>{
 
         @Override
@@ -133,6 +141,7 @@ public class MainFragment extends Fragment{
         protected void onPostExecute(ArrayList<String> result) {
             if(result!=null&&getActivity()!=null){
                 adapter =  new ImageAdaper(result,getActivity(),width);
+                adapter.setItemClickCallBack(MainFragment.this);
                 recyclerView.setAdapter(adapter);
                 recyclerView.setVisibility(View.VISIBLE);
                 bar.setVisibility(View.INVISIBLE);

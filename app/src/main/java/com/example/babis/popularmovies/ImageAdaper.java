@@ -27,6 +27,22 @@ public class ImageAdaper extends RecyclerView.Adapter<ImageAdaper.MyViewHolder>{
 
 
 
+     ItemClickCallBack itemClickCallBack;
+
+
+
+    public  interface ItemClickCallBack {
+        void onItemClick(int p);
+
+    }
+
+
+    public void setItemClickCallBack(final ItemClickCallBack itemClickCallBack) {
+        this.itemClickCallBack = itemClickCallBack;
+    }
+
+
+
     public ImageAdaper(ArrayList<String> result, Context context,int x) {
         myResult = result;
         myContext = context;
@@ -55,18 +71,23 @@ public class ImageAdaper extends RecyclerView.Adapter<ImageAdaper.MyViewHolder>{
         return myResult.size();
     }
 
-     class MyViewHolder extends RecyclerView.ViewHolder{
+     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
          ImageView imageView;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             imageView = (ImageView)itemView.findViewById(R.id.movie_image_view);
+            itemView.setOnClickListener(this);
 
 
 
         }
 
 
+         @Override
+         public void onClick(View v) {
+             itemClickCallBack.onItemClick(getAdapterPosition());
+         }
      }
 }
