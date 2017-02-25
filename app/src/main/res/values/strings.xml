@@ -4,4 +4,7 @@
     <string name="favorite">Favorite</string>
     <string name="most_popular">Most Popular Movies</string>
     <string name="no_internet">Sorry No Internet Connection</string>
+    <string name="results_for_the_adapter_key">results</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

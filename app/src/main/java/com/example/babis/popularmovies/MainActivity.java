@@ -38,9 +38,15 @@ public class MainActivity extends AppCompatActivity {
         //start the main fragment
         if(savedInstanceState==null){
             getSupportFragmentManager().beginTransaction().replace(R.id.container,new MainFragment()).commit();
+
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -2,11 +2,13 @@ package com.example.babis.popularmovies;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Point;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,7 +18,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -44,15 +45,16 @@ public class MainFragment extends Fragment implements ImageAdaper.ItemClickCallB
         // Required empty public constructor
     }
 
-    private ArrayList listData;
+
     private RecyclerView recyclerView;
     private ImageAdaper adapter;
     int width;
     final String API_KEY = "";
-    static ArrayList<String> posters;
     static boolean sortByPop = true;
     ProgressBar bar;
-
+    static ArrayList<String> posters, ratings, titles, overviews, dates;
+    String JSONResults;
+    ArrayList<String> resultsForAdapter = new ArrayList<>();
 
 
     @Override
@@ -78,7 +80,28 @@ public class MainFragment extends Fragment implements ImageAdaper.ItemClickCallB
         else width=size.x/2;
 
 
+
+        if(savedInstanceState==null) {
+            if (isNetworkAvailable()) {
+                new ImageLoadTask().execute();
+            } else {
+                Toast.makeText(getContext(), R.string.no_internet, Toast.LENGTH_SHORT).show();
+            }
+
+        }else {
+
+            resultsForAdapter = savedInstanceState.getStringArrayList(String.valueOf(R.string.results_for_the_adapter_key));
+            adapter =  new ImageAdaper(resultsForAdapter,getActivity(),width);
+            adapter.setItemClickCallBack(MainFragment.this);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setVisibility(View.VISIBLE);
+            bar.setVisibility(View.INVISIBLE);
+        }
+
+
+
         return view;
+
     }
 
     public boolean isNetworkAvailable()
@@ -89,16 +112,11 @@ public class MainFragment extends Fragment implements ImageAdaper.ItemClickCallB
     }
 
 
+
     @Override
-    public void onStart() {
-        super.onStart();
-
-        if (isNetworkAvailable()) {
-            new ImageLoadTask().execute();
-        } else {
-            Toast.makeText(getContext(),R.string.no_internet, Toast.LENGTH_SHORT).show();
-        }
-
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putStringArrayList(String.valueOf(R.string.results_for_the_adapter_key),resultsForAdapter);
     }
 
 
@@ -106,8 +124,15 @@ public class MainFragment extends Fragment implements ImageAdaper.ItemClickCallB
 
     @Override
     public void onItemClick(int p) {
-        String index = String.valueOf(p);
-        Toast.makeText(getActivity(),"hello movie "+index,Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getActivity(),MovieDetailsActivity.class)
+                .putExtra("overview",overviews.get(p))
+                .putExtra("rating",ratings.get(p))
+                .putExtra("title",titles.get(p))
+                .putExtra("date",dates.get(p))
+                .putExtra("poster",posters.get(p));
+
+        startActivity(intent);
+
     }
 
 
@@ -140,6 +165,9 @@ public class MainFragment extends Fragment implements ImageAdaper.ItemClickCallB
         @Override
         protected void onPostExecute(ArrayList<String> result) {
             if(result!=null&&getActivity()!=null){
+                resultsForAdapter = result;
+                Bundle res = new Bundle();
+                res.putStringArrayList(String.valueOf(R.string.results_for_the_adapter_key),result);
                 adapter =  new ImageAdaper(result,getActivity(),width);
                 adapter.setItemClickCallBack(MainFragment.this);
                 recyclerView.setAdapter(adapter);
@@ -160,7 +188,7 @@ public class MainFragment extends Fragment implements ImageAdaper.ItemClickCallB
         while (true){
             HttpURLConnection httpURLConnection =null;
             BufferedReader reader = null;
-            String JSONResults;
+
 
 
             try{
@@ -193,6 +221,15 @@ public class MainFragment extends Fragment implements ImageAdaper.ItemClickCallB
 
 
                 try{
+
+
+                    overviews = new ArrayList<>(Arrays.asList(getMovieDetailsFromJSON(JSONResults,"overview")));
+                    dates = new ArrayList<>(Arrays.asList(getMovieDetailsFromJSON(JSONResults,"release_date")));
+                    ratings = new ArrayList<>(Arrays.asList(getMovieDetailsFromJSON(JSONResults,"vote_average")));
+                    titles = new ArrayList<>(Arrays.asList(getMovieDetailsFromJSON(JSONResults,"original_title")));
+
+
+
                     return getPathsFromJSON(JSONResults);
                 }catch (JSONException e){
                     return null;
@@ -217,6 +254,40 @@ public class MainFragment extends Fragment implements ImageAdaper.ItemClickCallB
 
         }
     }
+
+
+
+
+    String[] getMovieDetailsFromJSON(String JSONStringParam, String param) throws JSONException{
+        JSONObject JSONString = new JSONObject(JSONStringParam);
+
+        JSONArray moviesArray = JSONString.getJSONArray("results");
+        String[] result = new String[moviesArray.length()];
+
+        for(int i = 0; i<moviesArray.length();i++)
+        {
+            JSONObject movie = moviesArray.getJSONObject(i);
+
+            if(param.equals("vote_average")) {
+                Double movieRating = movie.getDouble("vote_average");
+                String data =  Double.toString(movieRating)+"/10";
+                result[i]=data;
+            }else {
+                // instead of the poster_path this time we can get everything else using the second parameter param
+                String data = movie.getString(param);
+                result[i] = data;
+            }
+        }
+        return result;
+    }
+
+
+
+
+
+
+
+
 
 
 

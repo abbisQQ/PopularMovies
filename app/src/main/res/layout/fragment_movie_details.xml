@@ -1,0 +1,81 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.babis.favoritemoviesctheodorou.MovieDetailsFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/my_movie_details_scrollview">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="120dp"
+                android:id="@+id/title_text_view"
+                android:paddingLeft="@dimen/padding_size_big"
+                android:textSize="@dimen/text_size_big"
+                android:textColor="#ffffff"
+                android:text="@string/app_name"
+                android:background="#FF5600"
+                tools:text="Testing"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                />
+
+            <ImageView
+                android:layout_width="@dimen/movie_icon_dp"
+                android:layout_height="@dimen/movie_icon_dp"
+                android:padding="@dimen/padding_size_medium"
+                android:layout_marginLeft="-30dp"
+                tools:src="@mipmap/ic_launcher"
+                android:layout_below="@+id/title_text_view"
+                android:layout_alignParentLeft="true"
+                android:id="@+id/poster_image_view"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/padding_size_medium"
+                tools:text="Testing"
+                android:id="@+id/release_dates_text_view"
+                android:textSize="@dimen/text_size_medium"
+                android:padding="@dimen/padding_size_small"
+                android:layout_below="@+id/title_text_view"
+                android:layout_toRightOf="@+id/poster_image_view"
+                android:layout_alignRight="@id/title_text_view"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/text_size_medium"
+                android:textSize="@dimen/text_size_big"
+                tools:text="Testing"
+                android:id="@+id/rating_text_view"
+                android:padding="@dimen/padding_size_small"
+                android:layout_below="@+id/release_dates_text_view"
+                android:layout_toRightOf="@+id/poster_image_view"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/overview_text_view"
+                android:textSize="@dimen/text_size_medium"
+                android:padding="@dimen/padding_size_medium"
+                tools:text="Testing"
+                android:layout_below="@+id/poster_image_view"
+                android:textStyle="bold"
+                />
+
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</FrameLayout>
